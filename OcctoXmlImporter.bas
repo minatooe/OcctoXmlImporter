@@ -42,15 +42,11 @@ returnArray(0) = False
 '─────チェック終わり─────
 
 Dim XMLDocument As Object
-Set XMLDocument = CreateObject("MSXML2.DOMDocument") 'xmlデータ用変数
+Set XMLDocument = CreateObject("MSXML2.DOMDocument") 
 XMLDocument.async = False
-Dim FileValue As Boolean '読み込み状態用
+Dim FileValue As Boolean 
 Dim SelNodeList As MSXML2.IXMLDOMNodeList
-Dim xmlDataNode As IXMLDOMNode
 Dim Node  As IXMLDOMNode
-Dim subNode  As IXMLDOMNode
-Dim valueNode  As IXMLDOMNode
-Dim dataNode As IXMLDOMNode
 Dim nodeString As String
 
 Select Case param.Item("typeOfPriPlan")
@@ -118,6 +114,7 @@ i = 0
     i = i + 1
 Next
 
+Set XMLDocument = Nothing
 Set SelNodeList = Nothing
 Set Node = Nothing
 
