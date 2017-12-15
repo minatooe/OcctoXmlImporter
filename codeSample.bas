@@ -7,6 +7,7 @@ Option Explicit
     'companyCode : "合計"orエリアコードを含めた事業者コード(typeOfPriPlanが発販と連系線の場合は不要)
     'bgCode:BGコード(typeOfPriPlanが需調の場合は不要),
     'gridCode:"系統コード"(typeOfPriPlanが連系線の場合は申込番号)
+    'amountOrNot:"合計orブランク"(合計値を取りたいのか個別を取りたいのか)    
 '}
 
 Sub test()
