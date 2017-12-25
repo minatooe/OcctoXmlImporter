@@ -2,12 +2,12 @@ Attribute VB_Name = "codeSample"
 Option Explicit
 
 'param = {
-    'typeOfPriPlan : "ç™ºè²©" or  "éœ€èª¿" or "é€£ç³»ç·š",
-    'typeOfSecPlan : "ç™ºé›»"or"èª¿é”"or"è²©å£²"or"éœ€è¦",
-    'companyCode : "åˆè¨ˆ"orã‚¨ãƒªã‚¢ã‚³ãƒ¼ãƒ‰ã‚’å«ã‚ãŸäº‹æ¥­è€…ã‚³ãƒ¼ãƒ‰(typeOfPriPlanãŒç™ºè²©ã¨é€£ç³»ç·šã®å ´åˆã¯ä¸è¦)
-    'bgCode:BGã‚³ãƒ¼ãƒ‰(typeOfPriPlanãŒéœ€èª¿ã®å ´åˆã¯ä¸è¦),
-    'gridCode:"ç³»çµ±ã‚³ãƒ¼ãƒ‰"(typeOfPriPlanãŒé€£ç³»ç·šã®å ´åˆã¯ç”³è¾¼ç•ªå·)
-    'amountOrNot:"åˆè¨ˆorãƒ–ãƒ©ãƒ³ã‚¯"(åˆè¨ˆå€¤ã‚’å–ã‚ŠãŸã„ã®ã‹å€‹åˆ¥ã‚’å–ã‚ŠãŸã„ã®ã‹)
+    'typeOfPriPlan : "”­”Ì" or  "ù’²" or "˜AŒnü",@#string#
+    'typeOfSecPlan : "”­“d"or"’²’B"or"”Ì”„"or"ù—v"or"˜AŒnü",@#string#
+    'companyCode : "‘Œv"orƒGƒŠƒAƒR[ƒh‚ğŠÜ‚ß‚½–‹ÆÒƒR[ƒh(typeOfPriPlan‚ª”­”Ì‚Æ˜AŒnü‚Ìê‡‚Í•s—v),@#string#
+    'geneBgCode:"”­“dBGƒR[ƒh"(typeOfPriPlan‚ªù’²‚©˜AŒnü‚Ìê‡‚Í•s—v),@#string#
+    'gridCode:"Œn“ƒR[ƒhoræˆøæBGƒR[ƒhor\”Ô†(typeOfPriPlan‚ª˜AŒnü‚Ìê‡)",@#string#
+    'amountOrNot:"‡Œvorƒuƒ‰ƒ“ƒN"(typeOfSecPlan‚Åw’è‚µ‚½Œv‰æ‚Ì‡Œv’l‚ğæ‚è‚½‚¢ê‡‚Í"‡Œv"‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B)@#string#
 '}
 
 Sub test()
@@ -18,14 +18,23 @@ Dim paramValues As Variant
 Dim xmlPath As String
 Dim i As Long
 
-paramKeys = Array("typeOfPriPlan", "typeOfSecPlan", "companyCode", "bgCode", "gridCode", "amountOrNot")
-paramValues = Array("ç™ºè²©", "ç™ºé›»", "", "LZ999", "", "åˆè¨ˆ")
+Dim typeOfPriPlan, typeOfSecPlan, companyCode, geneBgCode, gridCode, amountOrNot As String
+typeOfPriPlan = "”­”Ì"
+typeOfSecPlan = "’²’B"
+companyCode = ""
+geneBgCode = ""
+gridCode = "ZZ999"
+amountOrNot = ""
+
+paramKeys = Array("typeOfPriPlan", "typeOfSecPlan", "companyCode", "geneBgCode", "gridCode", "amountOrNot") 'paramKeys‚Í•Ï‚¦‚È‚¢‚±‚Æ‚ğ„§
+paramValues = Array(typeOfPriPlan, typeOfSecPlan, companyCode, geneBgCode, gridCode, amountOrNot)
 param = HashMakeFromArray(paramKeys, paramValues)
-xmlPath = "C:\plans\W6_0150_20171211_00_99992_2.xml"
+xmlPath = "c:\plan\W6_0150_20171201_00_99999_9.xml"
 
 result = OcctoXmlImport(xmlPath, param(1))
-Debug.Print result(0)
+If result(0) Then
 ThisWorkbook.Sheets("Sheet1").Range("H1:H48").Value = WorksheetFunction.Transpose(result(1))
-
-
+Else
+MsgBox (result(1))
+End If
 End Sub

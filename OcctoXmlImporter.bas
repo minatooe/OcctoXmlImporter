@@ -2,12 +2,12 @@ Attribute VB_Name = "OcctoXmlImporter"
 Option Explicit
 
 'param = {
-    'typeOfPriPlan : "ç™ºè²©" or  "éœ€èª¿" or "é€£ç³»ç·š",
-    'typeOfSecPlan : "ç™ºé›»"or"èª¿é”"or"è²©å£²"or"éœ€è¦",
-    'companyCode : "åˆè¨ˆ"orã‚¨ãƒªã‚¢ã‚³ãƒ¼ãƒ‰ã‚’å«ã‚ãŸäº‹æ¥­è€…ã‚³ãƒ¼ãƒ‰(typeOfPriPlanãŒç™ºè²©ã¨é€£ç³»ç·šã®å ´åˆã¯ä¸è¦)
-    'bgCode:BGã‚³ãƒ¼ãƒ‰(typeOfPriPlanãŒéœ€èª¿ã®å ´åˆã¯ä¸è¦),
-    'gridCode:"ç³»çµ±ã‚³ãƒ¼ãƒ‰"(typeOfPriPlanãŒé€£ç³»ç·šã®å ´åˆã¯ç”³è¾¼ç•ªå·)
-    'amountOrNot:"åˆè¨ˆorãƒ–ãƒ©ãƒ³ã‚¯"(åˆè¨ˆå€¤ã‚’å–ã‚ŠãŸã„ã®ã‹å€‹åˆ¥ã‚’å–ã‚ŠãŸã„ã®ã‹) 
+    'typeOfPriPlan : "”­”Ì" or  "ù’²" or "˜AŒnü",
+    'typeOfSecPlan : "”­“d"or"’²’B"or"”Ì”„"or"ù—v"or"˜AŒnü",
+    'companyCode : "‘Œv"orƒGƒŠƒAƒR[ƒh‚ğŠÜ‚ß‚½–‹ÆÒƒR[ƒh(typeOfPriPlan‚ª”­”Ì‚Æ˜AŒnü‚Ìê‡‚Í‹ó‚ÅOK)
+    'geneBgCode:BGƒR[ƒh(typeOfPriPlan‚ªù’²‚Ìê‡‚Í•s—v),
+    'gridCode:"Œn“ƒR[ƒh"(typeOfPriPlan‚ª˜AŒnü‚Ìê‡‚Í\”Ô†)
+    'amountOrNot:"‡Œvorƒuƒ‰ƒ“ƒN"(‡Œv’l‚ğæ‚è‚½‚¢‚Ì‚©ŒÂ•Ê‚ğæ‚è‚½‚¢‚Ì‚©)
 '}
 
 Function OcctoXmlImport(ByVal xmlPath As String, ByVal param As Object)
@@ -19,91 +19,134 @@ Dim i As Long
 Dim tempParamKeys As Variant
 Dim tempParamValues As Variant
 Dim returnValue(0 To 47) As Variant
-tempParamKeys = Array("typeOfPriPlan", "typeOfSecPlan", "companyCode", "bgCode", "gridCode", "amountOrNot")
+tempParamKeys = Array("typeOfPriPlan", "typeOfSecPlan", "companyCode", "geneBgCode", "gridCode", "amountOrNot")
 tempParamValues = Array("", "", "", "", "", "")
 rightParamKeys = HashMakeFromArray(tempParamKeys, tempParamValues)
 
-'â”€â”€â”€â”€â”€paramã®keyãŒæ­£ã—ã„ã‹ãƒã‚§ãƒƒã‚¯â”€â”€â”€â”€â”€
+'„Ÿ„Ÿ„Ÿ„Ÿ„Ÿparam‚Ìkey‚ª³‚µ‚¢‚©ƒ`ƒFƒbƒN„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 paramKeys = param.Keys
 returnArray(0) = False
     For i = 0 To UBound(paramKeys)
         If rightParamKeys(1).exists(paramKeys(i)) = False Then
-        returnArray(1) = "ã‚¨ãƒ©ãƒ¼ï¼š" & paramKeys(i) & "ã¯ä¸æ­£ãªãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã ã‚ˆã€‚"
+        returnArray(1) = "ƒGƒ‰[F" & paramKeys(i) & "‚Í•s³‚Èƒpƒ‰ƒ[ƒ^‚¾‚æB"
         OcctoXmlImport = returnArray
         Exit Function
         End If
     Next i
     If param.Item("gridCode") <> "" And param.Item("amountOrNot") <> "" Then
-    returnArray(1) = "ã‚¨ãƒ©ãƒ¼ï¼šgridCodeã¨amountOrNotã¯åŒæ™‚ã«ã¯è¨­å®šã§ããªã„ã‚ˆã€‚"
+    returnArray(1) = "ƒGƒ‰[FgridCode‚ÆamountOrNot‚Í“¯‚É‚Íİ’è‚Å‚«‚È‚¢‚æB"
     OcctoXmlImport = returnArray
     Exit Function
     End If
 
-'â”€â”€â”€â”€â”€ãƒã‚§ãƒƒã‚¯çµ‚ã‚ã‚Šâ”€â”€â”€â”€â”€
+'„Ÿ„Ÿ„Ÿ„Ÿ„Ÿƒ`ƒFƒbƒNI‚í‚è„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 
 Dim XMLDocument As Object
-Set XMLDocument = CreateObject("MSXML2.DOMDocument") 
+Set XMLDocument = CreateObject("MSXML2.DOMDocument")
 XMLDocument.async = False
-Dim FileValue As Boolean 
+Dim FileValue As Boolean
 Dim SelNodeList As MSXML2.IXMLDOMNodeList
 Dim Node  As IXMLDOMNode
 Dim nodeString As String
 
 Select Case param.Item("typeOfPriPlan")
 
-Case "ç™ºè²©"
-
+Case "”­”Ì" '„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
     Select Case param.Item("typeOfSecPlan")
-    
-    Case "ç™ºé›»"
-        If param.Item("amountOrNot") = "åˆè¨ˆ" Then
-        nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00014/JPMR00014[(JP06300='" & param.Item("bgCode") & "')]/JPM00015/JPMR00015/JP06307  "
-        Else
-        nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00014/JPMR00014[(JP06300='" & param.Item("bgCode") & "')]/JPM00016/JPMR00016[(JP06186='" & param.Item("gridCode") & "')]/JPM00017/JPMR00017/JP06231"
-        End If
+        Case "”­“d"
+            If param.Item("companyCode") = "‘Œv" Then
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00012/JPMR00012/JPM00013/JPMR00013/JP06363"
+            ElseIf param.Item("amountOrNot") = "‡Œv" Then
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00014/JPMR00014[(JP06300='" & param.Item("geneBgCode") & "')]/JPM00015/JPMR00015/JP06307"
+            Else
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00014/JPMR00014[(JP06300='" & param.Item("geneBgCode") & "')]/JPM00016/JPMR00016[(JP06186='" & param.Item("gridCode") & "')]/JPM00017/JPMR00017/JP06231"
+            End If
+            
+        Case "”Ì”„"
+            If param.Item("companyCode") = "‘Œv" Then
+            nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00018/JPMR00018/JPM00019/JPMR00019/JP06319"
+            Else
+            nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00018/JPMR00018/JPM00020/JPMR00020[(JP06366='" & param.Item("gridCode") & "')]/JPM00021/JPMR00021/JP06319"
+            End If
         
-    Case "è²©å£²"
-        If param.Item("amountOrNot") = "åˆè¨ˆ" Then
-        nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00018/JPMR00018/JPM00019/JPMR00019/JP06319"
-        Else
-        nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00018/JPMR00018/JPM00020/JPMR00020[(JP06366='" & param.Item("bgCode") & "')]/JPM00021/JPMR00021/JP06319"
-        End If
-    
-    Case "èª¿é”"
-        If param.Item("amountOrNot") = "åˆè¨ˆ" Then
-        nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00022/JPMR00022/JPM00023/JPMR00023/JP06369"
-        Else
-        nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00022/JPMR00022/JPM00024/JPMR00024[(JP06366='" & param.Item("bgCode") & "')]/JPM00025/JPMR00025/JP06369"
-        End If
-    
-    Case Else
-        returnArray(1) = "ã‚¨ãƒ©ãƒ¼ï¼šæ€ã„ã‚‚ã‚ˆã‚‰ãªã„typeOfSecPlanã§ã—ãŸã€‚"
-        OcctoXmlImport = returnArray
-        Exit Function
+        Case "’²’B"
+            If param.Item("companyCode") = "‘Œv" Then
+            nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00022/JPMR00022/JPM00023/JPMR00023/JP06369"
+            Else
+            nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00022/JPMR00022/JPM00024/JPMR00024[(JP06366='" & param.Item("gridCode") & "')]/JPM00025/JPMR00025/JP06369"
+            End If
+        
+        Case Else
+            returnArray(1) = "ƒGƒ‰[Fv‚¢‚à‚æ‚ç‚È‚¢typeOfSecPlan‚Å‚µ‚½B"
+            OcctoXmlImport = returnArray
+            Exit Function
     End Select
 
 
-Case "éœ€èª¿"
+Case "ù’²"  '„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
+    Select Case param.Item("typeOfSecPlan")
+        Case "ù—v"
+            If param.Item("companyCode") = "‘Œv" Then
+            nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00010/JPMR00010/JPM00011/JPMR00011/JP06376"
+            Else
+            nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00022/JPMR00022[(JP06316='" & param.Item("companyCode") & "')]/JPM00023/JPMR00023/JPM00024/JPMR00024/JP06376"
+            End If
 
-Case "é€£ç³»ç·š"
+        Case "”Ì”„"
+            If param.Item("amountOrNot") = "‡Œv" And param.Item("companyCode") = "‘Œv" Then
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00018/JPMR00018/JPM00019/JPMR00019/JP06319"
+            ElseIf param.Item("companyCode") = "‘Œv" Then
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00018/JPMR00018/JPM00020/JPMR00020[(JP06366='" & param.Item("gridCode") & "')]/JPM00021/JPMR00021/JP06319"
+            ElseIf param.Item("amountOrNot") = "‡Œv" Then
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00022/JPMR00022[(JP06316='" & param.Item("companyCode") & "')]/JPM00031/JPMR00031/JPM00032/JPMR00032/JP06319"
+            Else
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00022/JPMR00022[(JP06316='" & param.Item("companyCode") & "')]/JPM00031/JPMR00031/JPM00033/JPMR00033[(JP06366='" & param.Item("gridCode") & "')]/JPM00034/JPMR00034/JP06319"
+            End If
+        
+        Case "’²’B"
+            If param.Item("amountOrNot") = "‡Œv" And param.Item("companyCode") = "‘Œv" Then
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00014/JPMR00014/JPM00015/JPMR00015/JP06369"
+            ElseIf param.Item("companyCode") = "‘Œv" Then
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00014/JPMR00014/JPM00016/JPMR00016[(JP06366='" & param.Item("gridCode") & "')]/JPM00017/JPMR00017/JP06369"
+            ElseIf param.Item("amountOrNot") = "‡Œv" Then
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00022/JPMR00022[(JP06316='" & param.Item("companyCode") & "')]/JPM00027/JPMR00027/JPM00028/JPMR00028/JP06369"
+            Else
+                nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00022/JPMR00022[(JP06316='" & param.Item("companyCode") & "')]/JPM00027/JPMR00027/JPM00029/JPMR00029[(JP06366='" & param.Item("gridCode") & "')]/JPM00030/JPMR00030/JP06369"
+            End If
+        
+        Case Else
+            returnArray(1) = "ƒGƒ‰[Fv‚¢‚à‚æ‚ç‚È‚¢typeOfSecPlan‚Å‚µ‚½B"
+            OcctoXmlImport = returnArray
+            Exit Function
+    End Select
 
-Case Else
-    returnArray(1) = "ã‚¨ãƒ©ãƒ¼ï¼šæ€ã„ã‚‚ã‚ˆã‚‰ãªã„typeOfPriPlanã§ã—ãŸã€‚"
+Case "˜AŒnü" '„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
+    Select Case param.Item("typeOfSecPlan")
+        Case "˜AŒnü"
+            nodeString = "SBD-MSG/JPMGRP/JPTRM/JPM00010/JPMR00010[(JP06185='" & param.Item("gridCode") & "')]/JPM00013/JPMR00013/JP06228"
+        Case Else
+            returnArray(1) = "ƒGƒ‰[Fv‚¢‚à‚æ‚ç‚È‚¢typeOfSecPlan‚Å‚µ‚½B"
+            OcctoXmlImport = returnArray
+            Exit Function
+    End Select
+
+Case Else '„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
+    returnArray(1) = "ƒGƒ‰[Fv‚¢‚à‚æ‚ç‚È‚¢typeOfPriPlan‚Å‚µ‚½B"
     OcctoXmlImport = returnArray
     Exit Function
 End Select
 
-'â”€â”€â”€â”€â”€xmlèª­ã¿è¾¼ã¿â”€â”€â”€â”€â”€
+'„Ÿ„Ÿ„Ÿ„Ÿ„Ÿxml“Ç‚İ‚İ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 FileValue = XMLDocument.Load(xmlPath)
     If FileValue = False Then
-        returnArray(1) = "ã‚¨ãƒ©ãƒ¼ï¼šxmlPathãŒå­˜åœ¨ã—ãªã„ã‚ˆã€‚"
+        returnArray(1) = "ƒGƒ‰[FxmlPath‚ª‘¶İ‚µ‚È‚¢‚æB"
         OcctoXmlImport = returnArray
         Exit Function
     End If
 
 Set SelNodeList = XMLDocument.SelectNodes(nodeString)
     If SelNodeList.Length = 0 Then
-    returnArray(1) = "ã‚¨ãƒ©ãƒ¼ï¼šæŒ‡å®šã•ã‚ŒãŸbgCodeã¾ãŸã¯gridCodeãŒå­˜åœ¨ã—ãªã‹ã£ãŸã‚ˆã€‚"
+    returnArray(1) = "ƒGƒ‰[Fw’è‚³‚ê‚½bgCodeAgridCodeAcompanyCode‚Ì‚Ç‚ê‚©‚ª‘¶İ‚µ‚È‚©‚Á‚½‚æB"
     OcctoXmlImport = returnArray
     Exit Function
     End If
@@ -131,13 +174,13 @@ Dim returnValue(0 To 1) As Variant
 Dim i As Long
 returnValue(0) = False
 Set returnHash = CreateObject("Scripting.Dictionary")
-'â”€â”€â”€â”€â”€2ã¤ã®Arrayã®å€‹æ•°ãŒé•ã‚ãªã„ã‹ãƒã‚§ãƒƒã‚¯â”€â”€â”€â”€â”€
+'„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ2‚Â‚ÌArray‚ÌŒÂ”‚ªˆá‚í‚È‚¢‚©ƒ`ƒFƒbƒN„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 If UBound(keysArray) <> UBound(valuesArray) Then
-returnValue(1) = "ãã‚ŒãŸé…åˆ—ã®æ•°ãŒä¸€è‡´ã—ãªã„ã‚ˆ"
+returnValue(1) = "‚­‚ê‚½”z—ñ‚Ì”‚ªˆê’v‚µ‚È‚¢‚æ"
 HashMakeFromArray = returnValue
 Exit Function
 End If
-'â”€â”€â”€â”€â”€ãƒã‚§ãƒƒã‚¯çµ‚ã‚ã‚Šâ”€â”€â”€â”€â”€
+'„Ÿ„Ÿ„Ÿ„Ÿ„Ÿƒ`ƒFƒbƒNI‚í‚è„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 For i = 0 To UBound(keysArray)
 returnHash.Add keysArray(i), valuesArray(i)
 Next i
